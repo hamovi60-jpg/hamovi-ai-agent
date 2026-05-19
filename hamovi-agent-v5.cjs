@@ -120,7 +120,7 @@ async function saveMsg(convId, phone, role, content, intent) {
 async function callAI(messages) {
   return new Promise((resolve, reject) => {
     const body = JSON.stringify({
-      model: 'anthropic/claude-3.5-sonnet',
+      model: 'openai/gpt-4o-mini',
       messages,
       max_tokens: 300,
       temperature: 0.72
