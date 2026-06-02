@@ -268,6 +268,21 @@ function rateLimit(phone) {
 // ============================================================
 // WEBHOOK
 // ============================================================
+app.get('/webhook', (req, res) => {
+  const mode = req.query['hub.mode'];
+  const token = req.query['hub.verify_token'];
+  const challenge = req.query['hub.challenge'];
+
+  const VERIFY_TOKEN = process.env.VERIFY_TOKEN || 'hamovi2026';
+
+  if (mode === 'subscribe' && token === VERIFY_TOKEN) {
+    console.log('Meta webhook verified');
+    return res.status(200).send(challenge);
+  }
+
+  return res.sendStatus(403);
+});
+
 app.post('/webhook', async (req, res) => {
   console.log('\n' + '═'.repeat(50));
 
