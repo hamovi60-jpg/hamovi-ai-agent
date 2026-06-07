@@ -286,17 +286,17 @@ app.get('/webhook', (req, res) => {
 app.post('/webhook', async (req, res) => {
   console.log('\n' + '═'.repeat(50));
 
-  const from   = req.body.From;
-  const body   = req.body.Body?.trim();
-  const waName = req.body.ProfileName || 'Customer';
+  const metaMessage = req.body?.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
+const metaContact = req.body?.entry?.[0]?.changes?.[0]?.value?.contacts?.[0];
 
+const from = metaMessage?.from || req.body.From;
+const body = metaMessage?.text?.body?.trim() || req.body.Body?.trim();
+const waName = metaContact?.profile?.name || req.body.ProfileName || 'Customer';
   console.log(`📱 ${from} | ${waName}`);
   console.log(`💬 "${body}"`);
-
-  if (!from || !body) {
-    return res.type('text/xml').send('<Response></Response>');
-  }
-
+if (!from || !body) {
+  return res.sendStatus(200);
+}
   const intent = detectIntent(body);
   const lang   = detectLang(body);
   console.log(`🎯 intent=${intent} lang=${lang}`);
